@@ -4,23 +4,27 @@ import (
 	"os"
 	"time"
 
-	"github.com/OneOfOne/struct2ts"
+	"github.com/cholman-zd/struct2ts"
 )
 
 type OtherStruct struct {
 	T time.Time `json:"t,omitempty"`
 }
 
+type EmbeddedStruct struct {
+	EmbeddedS string `json:"embedded_s,omitempty"`
+}
 type ComplexStruct struct {
-	S           string       `json:"s,omitempty"`
-	I           int          `json:"i,omitempty"`
-	F           float64      `json:"f,omitempty"`
-	TS          *int64       `json:"ts,omitempty" ts:"date,null"`
-	T           time.Time    `json:"t,omitempty"` // automatically handled
-	NullOther   *OtherStruct `json:"o,omitempty"`
-	NoNullOther *OtherStruct `json:"nno,omitempty" ts:",no-null"`
-	Data        Data         `json:"d"`
-	DataPtr     *Data        `json:"dp"`
+	EmbeddedStruct              // `json:"embedded"`
+	S              string       `json:"s,omitempty"`
+	I              int          `json:"i,omitempty"`
+	F              float64      `json:"f,omitempty"`
+	TS             *int64       `json:"ts,omitempty" ts:"date,null"`
+	T              time.Time    `json:"t,omitempty"` // automatically handled
+	NullOther      *OtherStruct `json:"o,omitempty"`
+	NoNullOther    *OtherStruct `json:"nno,omitempty" ts:",no-null"`
+	Data           Data         `json:"d"`
+	DataPtr        *Data        `json:"dp"`
 }
 
 type Data map[string]interface{}
