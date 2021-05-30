@@ -88,11 +88,11 @@ func (s *StructToTS) addTypeFields(out *Struct, t reflect.Type) {
 			continue
 		}
 
-		// if sf.Anonymous && k == reflect.Struct && !tf.IsDate {
-		// 	// log.Println("trying anonymous field:", sft, k)
-		// 	s.addTypeFields(out, sft)
-		// 	continue
-		// }
+		if tf.Name == "" { //&& sf.Anonymous && k == reflect.Struct && !tf.IsDate {
+			// log.Println("trying anonymous field:", sft, k)
+			s.addTypeFields(out, sft)
+			continue
+		}
 
 		switch {
 		case k == reflect.Map:

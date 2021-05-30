@@ -147,10 +147,17 @@ func (f *Field) setProps(sf reflect.StructField, sft reflect.Type) (ignore bool)
 		return
 	}
 
-	// TODO: if this is anonymous, it should set name to "" ?
-	// and then addTypeFields should flatten unnamed fields but keep named?
+	// Makes it so that a field with a `json:"foobar"` tag is treated like a non-anonymous field
+	// but anonymous fields without a json name have their name erased. Further up the stack, the
+	// lack of name means it's not kept as a standalone field
+	var jsonTagName string
 	if f.Name = sf.Name; len(jsonTag) > 0 && jsonTag[0] != "" {
-		f.Name = jsonTag[0]
+		jsonTagName = jsonTag[0]
+	}
+	if sf.Anonymous && jsonTagName == "" {
+		f.Name = ""
+	} else {
+		f.Name = jsonTagName
 	}
 
 	f.IsDate = isDate(sft) || len(tsTag) > 0 && tsTag[0] == "date" || sft.Kind() == reflect.Int64 && strings.HasSuffix(f.Name, "TS")
@@ -163,6 +170,8 @@ func (f *Field) setProps(sf reflect.StructField, sft reflect.Type) (ignore bool)
 			f.CanBeNull = true
 		case "optional":
 			f.IsOptional = true
+		case "inline":
+			f.Name = ""
 		}
 	}
 
