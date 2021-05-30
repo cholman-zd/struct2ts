@@ -147,6 +147,8 @@ func (f *Field) setProps(sf reflect.StructField, sft reflect.Type) (ignore bool)
 		return
 	}
 
+	// TODO: if this is anonymous, it should set name to "" ?
+	// and then addTypeFields should flatten unnamed fields but keep named?
 	if f.Name = sf.Name; len(jsonTag) > 0 && jsonTag[0] != "" {
 		f.Name = jsonTag[0]
 	}
